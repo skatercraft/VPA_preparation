@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 590" width="600" height="590" role="img" aria-labelledby="vpa-fig-pl-pcr-title vpa-fig-pl-pcr-desc" style="display:block;width:100%;height:auto;max-width:600px;margin-inline:auto;font-family:Arial,'Liberation Sans',sans-serif">
+<title id="vpa-fig-pl-pcr-title">Długość, sekwencja i funkcja to różne informacje</title>
+<desc id="vpa-fig-pl-pcr-desc">Dwa schematyczne pasma próbki i kontroli dodatniej znajdują się na tej samej wysokości. Linia przerywana porównuje wyłącznie ich pozycję. Oddzielne opisy żelu, odczytu sekwencji i testu funkcji nie tworzą hierarchii dowodów. Nie przedstawiono markera długości ani pełnego zestawu kontroli.</desc>
+<rect x="0" y="0" width="600" height="590" rx="0" fill="#ffffff"/>
+<text x="24" y="38" font-size="26" fill="#173451" font-weight="700">Pasmo nie odczytuje sekwencji</text>
+<text x="24" y="72" font-size="22" fill="#42566a">Schemat umowny: nie wynik pomiaru</text>
+<rect x="24" y="98" width="552" height="225" rx="10" fill="#f1f5f9"/>
+<text x="164" y="134" font-size="24" fill="#173451" font-weight="700" text-anchor="middle">próbka</text>
+<text x="433" y="134" font-size="24" fill="#173451" font-weight="700" text-anchor="middle">kontrola +</text>
+<rect x="74" y="154" width="180" height="108" rx="4" fill="#173451"/>
+<rect x="343" y="154" width="180" height="108" rx="4" fill="#173451"/>
+<line x1="110" y1="208" x2="218" y2="208" stroke="#ffffff" stroke-width="8"/>
+<line x1="379" y1="208" x2="487" y2="208" stroke="#ffffff" stroke-width="8"/>
+<line x1="254" y1="208" x2="343" y2="208" stroke="#42566a" stroke-width="2" stroke-dasharray="6 6"/>
+<text x="300" y="298" font-size="24" fill="#173451" text-anchor="middle">Zgodna pozycja pasm ≈ zgodna długość</text>
+<rect x="24" y="348" width="552" height="178" rx="10" fill="#f1f5f9"/>
+<text x="44" y="385" font-size="24" fill="#173451" font-weight="700">Żel: przybliżona długość</text>
+<text x="44" y="430" font-size="24" fill="#173451" font-weight="700">Odczyt: zasady w badanym regionie</text>
+<text x="44" y="475" font-size="24" fill="#173451" font-weight="700">Test funkcji: działanie biologiczne</text>
+<text x="24" y="562" font-size="24" fill="#42566a">Każdy odczyt dotyczy innego twierdzenia.</text>
+</svg>

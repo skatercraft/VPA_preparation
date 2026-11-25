@@ -1,0 +1,27 @@
+Licencja trzech nowych diagramów / License of the three new diagrams
+
+Zakres: diagrams/pl-pcr.svg, diagrams/pl-qpcr.svg, diagrams/pl-elisa.svg
+oraz odpowiadające pełne fragmenty <figure> w fragments/pl/diagram-*.html.
+
+Geometria, etykiety i podpisy zostały opracowane od podstaw w tym zadaniu
+jako autorskie materiały dydaktyczne VPA z pomocą AI. Nie kopiowano ani
+nie wektoryzowano cudzych ilustracji; nie użyto zewnętrznych fotografii,
+ikon, szablonów graficznych ani binarnych plików fontów. Źródła naukowe
+służą do sprawdzenia objaśnianych pojęć, nie są źródłami grafiki.
+
+CC0 1.0 Universal (SPDX: CC0-1.0), w zakresie, w jakim do tych materiałów
+istnieją prawa autorskie lub prawa pokrewne. Kopiowanie, modyfikacja,
+publikacja i użycie komercyjne są dozwolone bez obowiązku atrybucji.
+Zwięzły podpis „Autorski schemat VPA; CC0 1.0.” pozostawiono informacyjnie.
+Pełny tekst narzędzia CC0: https://creativecommons.org/publicdomain/zero/1.0/legalcode
+
+Ta deklaracja nie obejmuje istniejącego podręcznika, cudzych stron, pobranych
+plików w evidence/, znaków instytucji ani ich ilustracji. Ich treści pozostają
+objęte własnymi warunkami prawnoautorskimi. Evidence jest zapisem weryfikacji
+do prywatnej kontroli jakości, nie pakietem treści do publikacji.
+
+This dedication applies only to the newly generated original diagram geometry,
+labels and captions listed above, to the extent copyright or related rights exist.
+No third-party illustration has been copied. Scientific references are separately
+identified in additions.json and evidence/sources.json. Retained third-party
+HTML/text downloads are QA evidence and must not be published as site assets.

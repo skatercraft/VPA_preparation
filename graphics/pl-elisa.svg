@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 570" width="600" height="570" role="img" aria-labelledby="vpa-fig-pl-elisa-title vpa-fig-pl-elisa-desc" style="display:block;width:100%;height:auto;max-width:600px;margin-inline:auto;font-family:Arial,'Liberation Sans',sans-serif">
+<title id="vpa-fig-pl-elisa-title">ELISA kanapkowa łączy rozpoznanie antygenu z odczytem sygnału</title>
+<desc id="vpa-fig-pl-elisa-desc">Przeciwciało wychwytujące znajduje się na powierzchni i wiąże antygen. Przeciwciało detekcyjne rozpoznaje inny dostępny fragment tego antygenu. Litera E oznacza enzym związany tu bezpośrednio z detektorem. Cienkie linie bez grotów łączą etykiety z obiektami; nie oznaczają etapów procedury ani zależności przyczynowej. Nie przedstawiono substratu ani rzeczywistych proporcji cząsteczek.</desc>
+<rect x="0" y="0" width="600" height="570" rx="0" fill="#ffffff"/>
+<text x="24" y="38" font-size="26" fill="#173451" font-weight="700">Co wiąże ELISA kanapkowa?</text>
+<text x="24" y="72" font-size="22" fill="#42566a">Schemat ideowy: nie w skali</text>
+<rect x="148" y="89" width="44" height="34" rx="4" fill="#173451"/>
+<text x="170" y="115" font-size="24" fill="#ffffff" font-weight="700" text-anchor="middle">E</text>
+<line x1="170" y1="123" x2="170" y2="138" stroke="#173451" stroke-width="3"/>
+<path d="M170 138 V165 L140 190 M170 165 L200 190" fill="none" stroke="#245f9d" stroke-width="6" stroke-linecap="round"/>
+<circle cx="200" cy="215" r="25" fill="#d7e6f5" stroke="#245f9d" stroke-width="3"/>
+<path d="M155 348 V290 L110 240 M155 290 L200 240" fill="none" stroke="#173451" stroke-width="6" stroke-linecap="round"/>
+<line x1="30" y1="350" x2="275" y2="350" stroke="#173451" stroke-width="5"/>
+<line x1="195" y1="106" x2="282" y2="106" stroke="#708399" stroke-width="2"/>
+<text x="298" y="114" font-size="24" fill="#173451">enzym (E)</text>
+<line x1="184" y1="153" x2="282" y2="153" stroke="#708399" stroke-width="2"/>
+<text x="298" y="159" font-size="24" fill="#173451">przeciwciało</text>
+<text x="298" y="186" font-size="24" fill="#173451">detekcyjne</text>
+<line x1="228" y1="215" x2="282" y2="215" stroke="#708399" stroke-width="2"/>
+<text x="298" y="223" font-size="24" fill="#173451" font-weight="700">antygen</text>
+<line x1="158" y1="300" x2="282" y2="300" stroke="#708399" stroke-width="2"/>
+<text x="298" y="307" font-size="24" fill="#173451">przeciwciało</text>
+<text x="298" y="334" font-size="24" fill="#173451">wychwytujące</text>
+<text x="298" y="363" font-size="24" fill="#42566a">powierzchnia</text>
+<rect x="24" y="396" width="552" height="146" rx="10" fill="#f1f5f9"/>
+<text x="44" y="431" font-size="24" fill="#173451" font-weight="700">Krzywa wzorcowa wiąże sygnał</text>
+<text x="44" y="464" font-size="24" fill="#173451">ze stężeniem w zakresie oznaczalności.</text>
+<text x="44" y="511" font-size="24" fill="#173451" font-weight="700">Stężenie ≠ tempo produkcji.</text>
+</svg>
