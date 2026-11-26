@@ -189,6 +189,10 @@ main>footer{margin-top:.5rem}
  .notice{background:none}
 }
 </style>
+<style data-vpa-feature="question-progress">
+#answer-status{display:inline-flex;align-items:center;margin:.55rem 0 .2rem;padding:.25rem .6rem;border:1px solid #ccd5e1;border-radius:4px;background:#edf1f5;color:#526278;font:700 .8125rem/1.4 Arial,'Liberation Sans',sans-serif}
+#answer-status[data-answered="true"]{border-color:#9fc9ad;background:#e5f4ea;color:#185b37}
+</style>
 </head>
 <body class="workspace workspace--studio">
 <aside class="workspace-nav" data-vpa-shell="blue-workspace-v1">
@@ -209,7 +213,7 @@ main>footer{margin-top:.5rem}
 <section class="panel" aria-labelledby="prompt-heading">
 <p class="stage">01 / Pytanie</p><h2 id="prompt-heading">Próba odpowiedzi</h2>
 <div class="filters"><div class="field"><label for="topic">Temat</label><select id="topic"><option value="all">Wszystkie pytania</option><option value="past">Projekty i wkład</option><option value="motivation">Motywacja i grupy</option><option value="science">Nauka i analiza</option></select></div><button id="next" type="button">Następne pytanie</button></div>
-<div class="prompt"><div class="qhead"><span id="question-code"></span><span id="counter"></span></div><p id="question" lang="en" aria-live="polite"></p></div>
+<div class="prompt"><div class="qhead"><span id="question-code"></span><span id="counter"></span></div><p id="answer-status" data-vpa-addition="progress" data-answered="false" role="status" aria-live="polite">Jeszcze bez odpowiedzi</p><p id="question" lang="en" aria-live="polite"></p></div>
 <div class="clockline"><div class="timewrap"><div class="caption">Czas odpowiedzi</div><output class="digits" id="clock" aria-live="off">00:45</output></div><div class="actions"><button id="timer" type="button">Start</button><button class="quiet-button" id="timer-reset" type="button">Reset</button></div></div>
 <p class="muted" id="timer-note" role="status">Czas jest orientacyjny i nie zatrzymuje nagrania.</p>
 <details id="hint-box"><summary>Wskazówka po próbie</summary><p id="hint"></p></details>
@@ -278,13 +282,41 @@ const extensions=new Set(['mp3','mp4','m4a','aac','ogg','oga','opus','wav','webm
 const limitMs=300000, importLimit=25*1024*1024;
 let list=questions, cursor=0, questionDeadline=0, remaining=0, questionTimer;
 let pending=false, current=null, recordingInterval, take=null, audioURL='', contextURL='';
+// question-progress-start
+const questionCodes=new Set(questions.map(q=>q[0]));
+const answeredKey='vpa.questions.answered.v1',lastQuestionKey='vpa.questions.last.v1';
+let savedAnswered=[];
+try{savedAnswered=JSON.parse(localStorage.getItem(answeredKey)||'[]');}catch{}
+const answered=new Set(Array.isArray(savedAnswered)?savedAnswered.filter(code=>questionCodes.has(code)):[]);
+function saveAnswered(){try{localStorage.setItem(answeredKey,JSON.stringify([...answered].sort()));}catch{}}
+function readLastQuestion(){try{const code=localStorage.getItem(lastQuestionKey);return questionCodes.has(code)?code:'';}catch{return '';}}
+function rememberQuestion(code){try{localStorage.setItem(lastQuestionKey,code);}catch{}}
+function makeQuestionDeck(pool,avoidCode=readLastQuestion()){
+ const deck=pool.slice();
+ for(let i=deck.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[deck[i],deck[j]]=[deck[j],deck[i]];}
+ if(deck.length>1&&deck[0][0]===avoidCode){const j=1+Math.floor(Math.random()*(deck.length-1));[deck[0],deck[j]]=[deck[j],deck[0]];}
+ return deck;
+}
+function questionPool(){return topic.value==='all'?questions:questions.filter(q=>q[1]===topic.value);}
+function renderAnswered(){
+ const badge=$('answer-status'),code=list[cursor]?.[0],done=answered.has(code);if(!badge)return;
+ if(badge.dataset.answered===String(done)&&badge.dataset.question===code)return;
+ badge.dataset.answered=String(done);badge.dataset.question=code||'';
+ badge.textContent=done?'Odpowiedziano':'Jeszcze bez odpowiedzi';
+ badge.title=done?'Masz już nagraną lub wczytaną próbę tego pytania. Możesz odpowiedzieć ponownie.':'Nagranie lub wczytanie odpowiedzi oznaczy to pytanie jako przećwiczone.';
+}
+function markAnswered(code){if(!questionCodes.has(code))return;const added=!answered.has(code);answered.add(code);if(added)saveAnswered();renderAnswered();}
+function mergeAnswered(codes){if(!Array.isArray(codes))return;let added=false;for(const code of codes){if(questionCodes.has(code)&&!answered.has(code)){answered.add(code);added=true;}}if(added)saveAnswered();renderAnswered();}
+window.addEventListener('vpa:history-answered',event=>mergeAnswered(event.detail));
+window.addEventListener('storage',event=>{if(event.key!==answeredKey)return;try{mergeAnswered(JSON.parse(event.newValue||'[]'));}catch{}});
+// question-progress-end
 const time=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
 const drawTime=()=>{$('clock').textContent=time(Math.ceil(remaining/1000));};
 const notice=msg=>{$('record-status').textContent=msg;};
 const micReady=()=>Boolean(navigator.mediaDevices?.getUserMedia && window.MediaRecorder);
 function stopQuestion(){clearInterval(questionTimer);questionDeadline=0;$('timer').textContent='Start';}
 function resetQuestion(){stopQuestion();remaining=list[cursor][2]*1000;drawTime();$('timer-note').textContent='Czas jest orientacyjny i nie zatrzymuje nagrania.';}
-function renderQuestion(){const q=list[cursor];$('question-code').textContent=q[0];$('question').textContent=q[3];$('hint').textContent=q[4];$('counter').textContent=`${cursor+1} / ${list.length}`;$('hint-box').open=false;resetQuestion();}
+function renderQuestion(){const q=list[cursor];$('question-code').textContent=q[0];$('question').textContent=q[3];$('hint').textContent=q[4];$('counter').textContent=`${cursor+1} / ${list.length}`;$('hint-box').open=false;rememberQuestion(q[0]);renderAnswered();resetQuestion();}
 function tickQuestion(){remaining=Math.max(0,questionDeadline-performance.now());drawTime();if(remaining===0){stopQuestion();$('timer-note').textContent='Czas minął. Dokończ odpowiedź jednym zdaniem.';}}
 function stamp(){return new Date().toISOString().replace(/[-:]/g,'').slice(0,15)+'Z';}
 function recordingSnapshot(){return {q:list[cursor],lang:language.value,stamp:stamp()};}
@@ -292,7 +324,7 @@ function syncControls(){const busy=pending||Boolean(current);start.disabled=busy
 function release(stream){stream?.getTracks().forEach(t=>t.stop());}
 function discard(){audio.pause();audio.removeAttribute('src');audio.load();if(audioURL)URL.revokeObjectURL(audioURL);if(contextURL)URL.revokeObjectURL(contextURL);audioURL='';contextURL='';take=null;window.vpaReview?.(null,null);$('take').hidden=true;$('download').removeAttribute('href');$('context').removeAttribute('href');}
 function showTake(blob,ext,info,seconds){discard();const prefix=`VPA_${info.q[0]}_${info.lang}_${info.stamp}`;take=info;audioURL=URL.createObjectURL(blob);audio.src=audioURL;const manifest=`Próba VPA · ${info.q[0]}\nPytanie: ${info.q[3]}\nJęzyk odpowiedzi: ${info.lang}\nPlik: ${prefix}.${ext}\n${seconds==null?'':`Czas nagrania: ${time(seconds)}\n`}\nProśba: transkrypcja, tłumaczenie, ocena odpowiedzi i konkretne poprawki.\n`;
-contextURL=URL.createObjectURL(new Blob([manifest],{type:'text/plain;charset=utf-8'}));$('download').href=audioURL;$('download').download=prefix+'.'+ext;$('context').href=contextURL;$('context').download=prefix+'.txt';$('take-label').textContent=`${info.q[0]} · ${info.lang}${seconds==null?'':` · ${time(seconds)}`} · gotowe do odsłuchania`;$('take').hidden=false;window.vpaReview?.(blob,info);}
+contextURL=URL.createObjectURL(new Blob([manifest],{type:'text/plain;charset=utf-8'}));$('download').href=audioURL;$('download').download=prefix+'.'+ext;$('context').href=contextURL;$('context').download=prefix+'.txt';$('take-label').textContent=`${info.q[0]} · ${info.lang}${seconds==null?'':` · ${time(seconds)}`} · gotowe do odsłuchania`;$('take').hidden=false;markAnswered(info.q[0]);window.vpaReview?.(blob,info);}
 function extFor(type){const base=(type||'').toLowerCase().split(';')[0];return ({'audio/mp4':'m4a','audio/ogg':'ogg','audio/webm':'webm','audio/wav':'wav','audio/mpeg':'mp3','video/mp4':'mp4','video/webm':'webm'})[base]||null;}
 function monoWav(decoded){
  const frames=decoded.length, wav=new DataView(new ArrayBuffer(44+2*frames));
@@ -355,14 +387,14 @@ input.addEventListener('change',async()=>{
 });
 audio.addEventListener('error',()=>{if(take&&audio.getAttribute('src'))notice('Przeglądarka nie potrafi odtworzyć tego pliku. Jeśli plik jest poprawny, nadal możesz go pobrać i przesłać.');});
 $('discard').addEventListener('click',()=>{discard();$('record-clock').textContent='00:00';notice('Usunięto próbę z karty. Pobranego pliku to nie usuwa.');start.disabled?input.focus():start.focus();});
-$('next').addEventListener('click',()=>{cursor=(cursor+1)%list.length;renderQuestion();});
-topic.addEventListener('change',()=>{list=topic.value==='all'?questions:questions.filter(x=>x[1]===topic.value);cursor=0;renderQuestion();});
+$('next').addEventListener('click',()=>{const previous=list[cursor][0];cursor++;if(cursor>=list.length){list=makeQuestionDeck(questionPool(),previous);cursor=0;}renderQuestion();});
+topic.addEventListener('change',()=>{const previous=list[cursor]?.[0];list=makeQuestionDeck(questionPool(),previous);cursor=0;renderQuestion();});
 $('timer-reset').addEventListener('click',resetQuestion);
 $('timer').addEventListener('click',()=>{if(questionDeadline){tickQuestion();stopQuestion();return;}if(remaining<=0)resetQuestion();questionDeadline=performance.now()+remaining;$('timer').textContent='Pauza';questionTimer=setInterval(tickQuestion,120);});
 window.addEventListener('pagehide',()=>{if(current)release(current.stream);});
 window.addEventListener('pageshow',e=>{if(e.persisted&&current)cleanup(current);});
 if(!micReady())notice('Tu mikrofon jest niedostępny. Otwórz stronę bezpośrednio w przeglądarce przez HTTPS albo wczytaj plik z dyktafonu.');
-renderQuestion();syncControls();$('studio').hidden=false;
+list=makeQuestionDeck(questionPool());mergeAnswered(window.vpaHistoryAnsweredCodes);renderQuestion();syncControls();$('studio').hidden=false;
 })();
 </script>
 </div>
